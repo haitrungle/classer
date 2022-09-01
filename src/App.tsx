@@ -1,25 +1,23 @@
-import { MantineProvider, Title } from '@mantine/core';
+import { Group, MantineProvider, Title } from '@mantine/core';
 import TableSkeleton from './components/Table';
+import EventForm from './components/EventForm';
 
 export default function App() {
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS
       theme={{
         fontFamily: 'IBM Plex Sans, sans-serif',
-        fontSizes: {
-          xs: 12,
-          sm: 16,
-          md: 20,
-          lg: 24,
-          xl: 32,
-        },
         other: {
           cellHeight: 48,
+          cellWidth: 200,
         },
       }}
     >
       <Title order={1}>Lichoc</Title>
-      <TableSkeleton timeStart={8} timeEnd={18} dayEnd={5} />
+      <Group style={{alignItems: 'flex-start'}}>
+        <TableSkeleton timeStart={8} timeEnd={18} dayEnd={5} />
+        <EventForm />
+      </Group>
     </MantineProvider>
   );
 }
