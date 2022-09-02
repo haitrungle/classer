@@ -42,12 +42,9 @@ function EventForm() {
   const { classes: checkboxClasses } = useCheckboxStyles()
   const { classes: paperClasses } = usePaperStyle()
 
-  const initialCheckboxStates = Object.fromEntries(daysOfWeekShort.map(day => [day, false]))
-  const [checkboxStates, setCheckboxStates] = useState(initialCheckboxStates)
-  const toggleCheckbox = (day: string) =>
-    setCheckboxStates({ ...checkboxStates, [day]: !checkboxStates[day]})
-
   const [startTime, setStartTime] = useState(0)
+
+  const [checkedDays, setCheckedDays] = useState<string[]>([])
 
   return (
     <Paper shadow="sm" radius="md" withBorder className={paperClasses.root}>
@@ -59,24 +56,24 @@ function EventForm() {
       
       <div>
         <Text size='sm'>Day</Text>
-        <Group spacing="xs">
+        <Checkbox.Group spacing="xs" value={checkedDays} onChange={setCheckedDays} style={{ paddingTop: 0 }}>
           {
             daysOfWeekShort.map(
               (day) => (
                 <Checkbox
                   key={day}
-                  checked={checkboxStates[day]}
-                  onChange={() => { toggleCheckbox(day); console.log(checkboxStates) }}
                   icon={noIcon}
-                  value={day.toLowerCase()}
+                  value={day}
                   label={day}
                   classNames={checkboxClasses}
-                  styles={{ label: {color: checkboxStates[day] ? 'white' : 'inherit'} }}
+                  styles={{
+                    label: {color: checkedDays.includes(day) ? 'white' : 'inherit'}
+                  }}
                 />
               )
             )
           }
-        </Group>
+        </Checkbox.Group>
       </div>
 
       <div>
