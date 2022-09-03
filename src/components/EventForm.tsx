@@ -12,7 +12,7 @@ import {
   TextInput,
   Title,
 } from "@mantine/core"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { daysOfWeekShort, timesData } from "@/helpers/time.helpers"
 
@@ -49,7 +49,22 @@ const usePaperStyle = createStyles((theme) => ({
 
 const noIcon: CheckboxProps["icon"] = ({ indeterminate, className }) => null
 
-function EventForm() {
+export interface Submission {
+  id: number
+  name: string
+  days: string[]
+  startTime: string
+  endTime: string
+  location: string
+  note: string
+  color: string
+}
+
+interface EventFormProps {
+  onValidSubmission?: (obj: Submission) => any
+}
+
+function EventForm({ onValidSubmission }: EventFormProps) {
   const { classes: checkboxClasses } = useCheckboxStyles()
   const { classes: paperClasses } = usePaperStyle()
 
@@ -60,6 +75,43 @@ function EventForm() {
   const [location, setLocation] = useState("")
   const [note, setNote] = useState("")
   const [color, setColor] = useState("")
+
+  const [validation, setValidation] = useState({
+    name: false,
+    day: false,
+    time: false,
+    submitCount: 0,
+  })
+
+  const validate = () => {
+    setValidation({
+      name: name.length === 0,
+      day: checkedDays.length === 0,
+      time: (startTime && endTime) === null,
+      submitCount: validation.submitCount + 1,
+    })
+  }
+
+  useEffect(() => {
+    if (
+      Object.values(validation).includes(true) ||
+      validation.submitCount === 0 ||
+      onValidSubmission === undefined
+    ) {
+      return
+    } else {
+      onValidSubmission({
+        id: validation.submitCount,
+        name: name,
+        days: checkedDays,
+        startTime: startTime || "",
+        endTime: endTime || "",
+        location: location,
+        note: note,
+        color: color,
+      })
+    }
+  }, [validation])
 
   return (
     <Paper shadow="sm" radius="md" withBorder className={paperClasses.root}>
@@ -150,7 +202,7 @@ function EventForm() {
         ]}
       />
 
-      <Button>Add event</Button>
+      <Button onClick={validate}>Add event</Button>
     </Paper>
   )
 }

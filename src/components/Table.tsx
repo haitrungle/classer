@@ -1,26 +1,29 @@
-import { Card, createStyles, ScrollArea } from "@mantine/core"
+import { Card, createStyles, ScrollArea, Text } from "@mantine/core"
 import { range } from "@/utils"
-import { daysOfWeek } from "@/helpers/time.helpers"
+import { dayIndex, daysOfWeek, timeToNumber } from "@/helpers/time.helpers"
+import { Submission } from "./EventForm"
 
 interface TableSkeletonProps {
   timeStart: number
   timeEnd: number
   dayEnd: 5 | 6 | 7
+  submissions: Submission[]
 }
 
-const useStyles = createStyles((theme) => ({
+const useTableStyles = createStyles((theme) => ({
   container: {
     position: "relative",
   },
   table: {
     borderCollapse: "collapse",
-    width: 1100,
+    width: "100%",
+    minWidth: theme.other.cellWidth * (5 + 1 / 2.5),
   },
   tr: {
     height: theme.other.cellHeight,
   },
   thTime: {
-    width: theme.other.cellWidth / 3,
+    width: theme.other.cellWidth / 2.5,
   },
   thDay: {
     width: theme.other.cellWidth,
@@ -33,18 +36,60 @@ const useStyles = createStyles((theme) => ({
   td: {
     borderTop: "1px dashed black",
   },
-  cell: {
-    position: "absolute",
-    zIndex: 10,
-    width: 200 - 16,
-    height: 3 * theme.other.cellHeight - 4,
-    top: 2 * theme.other.cellHeight + 2,
-    left: theme.other.cellWidth / 3 + 8,
-  },
 }))
 
-function TableSkeleton({ timeStart, timeEnd, dayEnd }: TableSkeletonProps) {
-  const { classes } = useStyles()
+interface CardParams {
+  offsetX: number
+  offsetY: number
+  height: number
+}
+
+const useCardStyles = createStyles(
+  (theme, { offsetX, offsetY, height }: CardParams) => ({
+    card: {
+      position: "absolute",
+      zIndex: 10,
+      left: (1 / 2.5 + offsetX) * theme.other.cellWidth + 4,
+      top: (1 + offsetY) * theme.other.cellHeight + 4,
+      width: 200 - 8,
+      height: height * theme.other.cellHeight - 8,
+    },
+  })
+)
+
+interface EventCardProps {
+  submission: Submission
+  cardParams: CardParams
+}
+
+function EventCard({ submission, cardParams }: EventCardProps) {
+  const { classes } = useCardStyles(cardParams)
+  console.log(submission.days)
+  console.log(cardParams)
+  return (
+    <Card
+      shadow="xs"
+      withBorder
+      style={{ textAlign: "center", padding: 8 }}
+      className={classes.card}
+    >
+      <Text weight={700}>{submission.name}</Text>
+      <Text>{submission.location}</Text>
+      <Text>{submission.note}</Text>
+    </Card>
+  )
+}
+
+function TableSkeleton({
+  timeStart: timeStartTable,
+  timeEnd: timeEndTable,
+  dayEnd,
+  submissions,
+}: TableSkeletonProps) {
+  const { classes } = useTableStyles()
+
+  console.log(submissions)
+
   return (
     <ScrollArea>
       <div className={classes.container}>
@@ -60,7 +105,7 @@ function TableSkeleton({ timeStart, timeEnd, dayEnd }: TableSkeletonProps) {
             </tr>
           </thead>
           <tbody>
-            {range(timeStart, timeEnd).map((t) => (
+            {range(timeStartTable, timeEndTable).map((t) => (
               <tr key={t} className={classes.tr}>
                 <td scope="row" className={classes.tdTime}>
                   {`${t}:00`}
@@ -70,10 +115,22 @@ function TableSkeleton({ timeStart, timeEnd, dayEnd }: TableSkeletonProps) {
             ))}
           </tbody>
         </table>
-        <Card shadow="xs" withBorder className={classes.cell}>
-          Testing
-        </Card>
       </div>
+      {submissions
+        .map((s) =>
+          s.days.map((day) => (
+            <EventCard
+              key={`${s.name}_${day}_${s.startTime}-${s.endTime}`}
+              submission={s}
+              cardParams={{
+                offsetX: dayIndex(day),
+                offsetY: timeToNumber(s.startTime) - timeStartTable,
+                height: timeToNumber(s.endTime) - timeToNumber(s.startTime),
+              }}
+            />
+          ))
+        )
+        .flat()}
     </ScrollArea>
   )
 }
