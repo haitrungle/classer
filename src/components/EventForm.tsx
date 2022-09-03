@@ -14,7 +14,7 @@ import {
 } from "@mantine/core"
 import { useState } from "react"
 
-const daysOfWeekShort = ["M", "Tu", "W", "Th", "F", "Sa", "Su"]
+import { daysOfWeekShort, timesData } from "@/helpers/time.helpers"
 
 const useCheckboxStyles = createStyles((theme) => ({
   root: {
@@ -48,8 +48,6 @@ const usePaperStyle = createStyles((theme) => ({
 }))
 
 const noIcon: CheckboxProps["icon"] = ({ indeterminate, className }) => null
-
-const timeData = ["8:00", "8:15", "8:30", "8:45", "9:00"]
 
 function EventForm() {
   const { classes: checkboxClasses } = useCheckboxStyles()
@@ -96,7 +94,7 @@ function EventForm() {
             aria-label="Start time"
             placeholder="Start time"
             searchable
-            data={timeData}
+            data={timesData}
             maxDropdownHeight={200}
             style={{ width: 128 }}
           />
@@ -104,7 +102,7 @@ function EventForm() {
             aria-label="End time"
             placeholder="End time"
             searchable
-            data={timeData}
+            data={timesData}
             maxDropdownHeight={200}
             style={{ width: 128 }}
           />

@@ -1,23 +1,12 @@
 import { Card, createStyles, ScrollArea } from "@mantine/core"
+import { range } from "@/utils"
+import { daysOfWeek } from "@/helpers/time.helpers"
 
 interface TableSkeletonProps {
   timeStart: number
   timeEnd: number
   dayEnd: 5 | 6 | 7
 }
-
-const weekdayNames = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-]
-
-const range = (start: number, stop: number, step: number = 1) =>
-  Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step)
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -63,7 +52,7 @@ function TableSkeleton({ timeStart, timeEnd, dayEnd }: TableSkeletonProps) {
           <thead>
             <tr className={classes.tr}>
               <th className={classes.thTime}></th>
-              {weekdayNames.slice(0, dayEnd).map((day) => (
+              {daysOfWeek.slice(0, dayEnd).map((day) => (
                 <th key={day} className={classes.thDay}>
                   {day}
                 </th>
