@@ -17,7 +17,7 @@ export default function App() {
     >
       <Title order={1}>Lichoc</Title>
       <Group style={{ alignItems: "flex-start" }}>
-        <TableSkeleton timeStart={8} timeEnd={18} dayEnd={5} />
+        <TableSkeleton timeStart={8} timeEnd={19} dayEnd={5} />
         <EventForm />
       </Group>
     </MantineProvider>

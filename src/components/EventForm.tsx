@@ -53,14 +53,23 @@ function EventForm() {
   const { classes: checkboxClasses } = useCheckboxStyles()
   const { classes: paperClasses } = usePaperStyle()
 
-  const [startTime, setStartTime] = useState(0)
-
+  const [name, setName] = useState("")
   const [checkedDays, setCheckedDays] = useState<string[]>([])
+  const [startTime, setStartTime] = useState<string | null>(null)
+  const [endTime, setEndTime] = useState<string | null>(null)
+  const [location, setLocation] = useState("")
+  const [note, setNote] = useState("")
+  const [color, setColor] = useState("")
 
   return (
     <Paper shadow="sm" radius="md" withBorder className={paperClasses.root}>
       <Title order={3}>Add event</Title>
-      <TextInput placeholder="Event name" label="Name" />
+      <TextInput
+        value={name}
+        onChange={(e) => setName(e.currentTarget.value)}
+        placeholder="Event name"
+        label="Name"
+      />
 
       <div>
         <Text size="sm">Day</Text>
@@ -91,6 +100,8 @@ function EventForm() {
         <Text size="sm">Time</Text>
         <Group sx={{ justifyContent: "space-between" }}>
           <Select
+            value={startTime}
+            onChange={setStartTime}
             aria-label="Start time"
             placeholder="Start time"
             searchable
@@ -99,6 +110,8 @@ function EventForm() {
             style={{ width: 128 }}
           />
           <Select
+            value={endTime}
+            onChange={setEndTime}
             aria-label="End time"
             placeholder="End time"
             searchable
@@ -109,11 +122,23 @@ function EventForm() {
         </Group>
       </div>
 
-      <TextInput placeholder="Location (optional)" label="Location" />
+      <TextInput
+        value={location}
+        onChange={(e) => setLocation(e.currentTarget.value)}
+        placeholder="Location (optional)"
+        label="Location"
+      />
 
-      <TextInput placeholder="Notes (optional)" label="Notes" />
+      <TextInput
+        value={note}
+        onChange={(e) => setNote(e.currentTarget.value)}
+        placeholder="Note (optional)"
+        label="Note"
+      />
 
       <ColorInput
+        value={color}
+        onChange={setColor}
         placeholder="Pick color"
         label="Color"
         disallowInput
