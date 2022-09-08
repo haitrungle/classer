@@ -75,7 +75,8 @@ function EventForm({ onValidSubmission }: EventFormProps) {
   const [location, setLocation] = useState("")
   const [note, setNote] = useState("")
   const [color, setColor] = useState("")
-
+  // TODO: consider using Mantine useForm hook
+  // See https://mantine.dev/form/validation/
   const [validation, setValidation] = useState({
     name: false,
     day: false,
@@ -121,15 +122,17 @@ function EventForm({ onValidSubmission }: EventFormProps) {
         onChange={(e) => setName(e.currentTarget.value)}
         placeholder="Event name"
         label="Name"
+        error={validation.name && "Please enter a name"}
       />
 
       <div>
-        <Text size="sm">Day</Text>
         <Checkbox.Group
           spacing="xs"
           value={checkedDays}
           onChange={setCheckedDays}
-          style={{ paddingTop: 0 }}
+          label="Day"
+          offset={0}
+          style={{ marginBottom: 5 }}
         >
           {daysOfWeekShort.map((day) => (
             <Checkbox
@@ -146,6 +149,11 @@ function EventForm({ onValidSubmission }: EventFormProps) {
             />
           ))}
         </Checkbox.Group>
+        {validation.day ? (
+          <Text color="#ee5250" size="xs">
+            Please choose at least one day
+          </Text>
+        ) : null}
       </div>
 
       <div>
