@@ -70,7 +70,7 @@ function EventCard({ submission, cardParams }: EventCardProps) {
     <Card
       shadow="xs"
       withBorder
-      style={{ textAlign: "center", padding: 8 }}
+      style={{ textAlign: "center", padding: 2 }}
       className={classes.card}
     >
       <Text weight={700}>{submission.name}</Text>

@@ -12,7 +12,7 @@ export default function App() {
       theme={{
         fontFamily: "IBM Plex Sans, sans-serif",
         other: {
-          cellHeight: 48,
+          cellHeight: 60,
           cellWidth: 200,
         },
       }}
